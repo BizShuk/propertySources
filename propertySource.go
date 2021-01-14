@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	pSource "propertysources/propertysource"
 	"propertysources/propertysource/impl"
 )
@@ -40,11 +39,4 @@ func New() *PropertiesSources {
 	p := &PropertiesSources{}
 	p.load()
 	return p
-}
-
-func main() {
-	p := New()
-	val, ok := p.Get("a")
-	log.Println(val)
-	log.Println(ok)
 }

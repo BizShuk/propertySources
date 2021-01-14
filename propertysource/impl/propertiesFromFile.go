@@ -2,7 +2,6 @@ package impl
 
 import (
 	"bufio"
-	"log"
 	"os"
 	pSource "propertysources/propertysource"
 )
@@ -10,14 +9,17 @@ import (
 // PropertiesFromFile load properties from file
 type PropertiesFromFile map[string]string
 
-func (p PropertiesFromFile) load(filename string) {
+func (p PropertiesFromFile) load(filename string) error {
 	path, err := os.Getwd()
 	if err != nil {
-		log.Println(err)
+		return err
 	}
 
 	file, err := os.Open(path + "/" + filename)
 	defer file.Close()
+	if err != nil {
+		return err
+	}
 
 	reader := bufio.NewReader(file)
 
@@ -29,6 +31,7 @@ func (p PropertiesFromFile) load(filename string) {
 		key, val := parseProperty(string(line))
 		p.Set(key, val)
 	}
+	return nil
 }
 
 // Get property with key
@@ -45,7 +48,12 @@ func (p PropertiesFromFile) Set(key string, val string) {
 // NewPropertiesFromFile NewPropertiesFromFile constructor
 func NewPropertiesFromFile(filename string) pSource.Properties {
 	pf := PropertiesFromFile(make(map[string]string))
-	pf.load(filename)
+
+	err := pf.load(filename)
+	if err != nil {
+		return nil
+	}
+
 	var p pSource.Properties = pf
 	return p
 }
