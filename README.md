@@ -6,6 +6,8 @@ Default sequence: `.env` file in current folder > environment variable
 
 ## TODO
 
+### Get home dir .env file
+
 ### Extend profiel concept
 
 including dev, qa, cert, production. at least for `.env` file
