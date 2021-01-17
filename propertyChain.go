@@ -7,24 +7,24 @@ import (
 
 // PropertiesChain contain multiple properties from default chaining
 type PropertiesChain struct {
-	plist []Properties
+	prop []Properties
 }
 
-func (p *PropertiesChain) load() {
-	p.appendProperties(CreateProperties("os://.env"))
-	p.appendProperties(CreateProperties(".env"))
+func (pc *PropertiesChain) load() {
+	pc.appendProperties(CreateProperties("os://.env"))
+	pc.appendProperties(CreateProperties(".env"))
 }
 
-func (p *PropertiesChain) appendProperties(prop Properties) {
-	if p == nil {
+func (pc *PropertiesChain) appendProperties(p Properties) {
+	if pc == nil {
 		return
 	}
-	p.plist = append(p.plist, prop)
+	pc.prop = append(pc.prop, p)
 }
 
 // Get get value with key from propertysources chain
-func (p *PropertiesChain) Get(key string) (val string, ok bool) {
-	for _, v := range p.plist {
+func (pc *PropertiesChain) Get(key string) (val string, ok bool) {
+	for _, v := range pc.prop {
 		sVal, ok := v.Get(key)
 		if ok {
 			val = sVal
@@ -36,12 +36,12 @@ func (p *PropertiesChain) Get(key string) (val string, ok bool) {
 
 // New PropertySources constructor
 func New() *PropertiesChain {
-	p := &PropertiesChain{}
-	p.load()
-	return p
+	pc := &PropertiesChain{}
+	pc.load()
+	return pc
 }
 
 func main() {
-	p := New()
-	log.Println(p.Get("a"))
+	pc := New()
+	log.Println(pc.Get("a"))
 }
