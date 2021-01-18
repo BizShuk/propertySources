@@ -11,7 +11,7 @@ import (
 // OsEnvProperties load properties from file
 type OsEnvProperties map[string]string
 
-func (p OsEnvProperties) load(reader io.ReadCloser) error {
+func (p OsEnvProperties) ReadFrom(reader io.Reader) (n int64, err error) {
 	bufReader := bufio.NewReader(reader)
 
 	for {
@@ -20,14 +20,14 @@ func (p OsEnvProperties) load(reader io.ReadCloser) error {
 			if err == io.EOF {
 				break
 			}
-			return err
+			return 0, err
 		}
 		s := string(line)
 		i := strings.IndexAny(s, "=")
 		p[s[0:i]] = s[i+1:]
 	}
 
-	return nil
+	return 0, nil
 }
 
 // Get property with key
@@ -47,12 +47,12 @@ func NewOsEnvProperties(uri string) (Properties, error) {
 	reader := propertyio.GetProtocolHandler(uri)()
 	defer reader.Close()
 
-	pf := OsEnvProperties(make(map[string]string))
-	err := pf.load(reader)
+	p := OsEnvProperties(make(map[string]string))
+	_, err := p.ReadFrom(reader)
 	if err != nil {
 		log.Fatal("Load properties failed")
 		return nil, err
 	}
 
-	return pf, err
+	return p, err
 }

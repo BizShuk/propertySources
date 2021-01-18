@@ -1,6 +1,7 @@
 package property
 
 import (
+	"io"
 	. "propertychain/utils"
 )
 
@@ -8,6 +9,7 @@ import (
 type Properties interface {
 	Get(key string) (val string, ok bool)
 	Set(key string, val string)
+	io.ReaderFrom
 }
 
 func CreateProperties(uri string) Properties {
