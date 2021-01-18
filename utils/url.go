@@ -18,10 +18,8 @@ const (
 	XML                 // .xml
 )
 
-// GetProtocolAndExtension get protocol and extension
-func GetProtocolAndExtension(uri string) (protocol, extension int) {
+func GetProtocol(uri string) (protocol int) {
 	protocol = FILE
-	extension = STRING
 
 	if strings.HasPrefix(uri, "os") {
 		protocol = OS
@@ -32,7 +30,12 @@ func GetProtocolAndExtension(uri string) (protocol, extension int) {
 	if strings.HasPrefix(uri, "ftp") {
 		protocol = FTP
 	}
+	return
+}
 
+// GetExtension get protocol and extension
+func GetExtension(uri string) (extension int) {
+	extension = STRING
 	if strings.HasSuffix(uri, "json") {
 		extension = JSON
 	}

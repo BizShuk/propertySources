@@ -1,7 +1,6 @@
 package property
 
 import (
-	"io"
 	. "propertychain/utils"
 )
 
@@ -12,13 +11,10 @@ type Properties interface {
 }
 
 func CreateProperties(uri string) Properties {
-	protocol, extension := GetProtocolAndExtension(uri)
-
-	loadSourceHandler := GetPropertySourceHandler(protocol)
+	extension := GetExtension(uri)
 	createPropertyHandler := GetPropertyHandler(extension)
 
-	sourceReader := loadSourceHandler(uri)
-	p, err := createPropertyHandler(sourceReader)
+	p, err := createPropertyHandler(uri)
 	if err != nil {
 		return nil
 	}
@@ -40,14 +36,19 @@ func GetPropertyHandler(extension int) (ph propertiesHandler) {
 	return
 }
 
-type propertiesHandler func(reader io.Reader) (Properties, error)
+type propertiesHandler func(uri string) (Properties, error)
 
-var OsEnvPropertiesCreator = func(reader io.Reader) (Properties, error) {
-	p, err := NewOsEnvProperties(reader)
+var OsEnvPropertiesCreator = func(uri string) (Properties, error) {
+	p, err := NewOsEnvProperties(uri)
 	return p, err
 }
 
-var StringPropertiesCreator = func(reader io.Reader) (Properties, error) {
-	p, err := NewStringProperties(reader)
+var StringPropertiesCreator = func(uri string) (Properties, error) {
+	p, err := NewStringProperties(uri)
+	return p, err
+}
+
+var JsonPropertiesCreator = func(uri string) (Properties, error) {
+	p, err := NewJsonProperties(uri)
 	return p, err
 }

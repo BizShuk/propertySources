@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"io"
 	"log"
+	propertyio "propertychain/io"
 	"strings"
 )
 
 // StringProperties load properties from file
 type StringProperties map[string]string
 
-func (p StringProperties) load(reader io.Reader) error {
+func (p StringProperties) load(reader io.ReadCloser) error {
 	bufReader := bufio.NewReader(reader)
 
 	for {
@@ -41,7 +42,10 @@ func (p StringProperties) Set(key string, val string) {
 }
 
 // NewStringProperties NewStringProperties constructor
-func NewStringProperties(reader io.Reader) (Properties, error) {
+func NewStringProperties(uri string) (Properties, error) {
+
+	reader := propertyio.GetProtocolHandler(uri)()
+	defer reader.Close()
 
 	pf := StringProperties(make(map[string]string))
 
@@ -50,5 +54,6 @@ func NewStringProperties(reader io.Reader) (Properties, error) {
 		log.Fatal("Load StringProperties failed")
 		return nil, err
 	}
+
 	return pf, nil
 }

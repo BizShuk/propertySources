@@ -4,13 +4,14 @@ import (
 	"bufio"
 	"io"
 	"log"
+	propertyio "propertychain/io"
 	"strings"
 )
 
 // OsEnvProperties load properties from file
 type OsEnvProperties map[string]string
 
-func (p OsEnvProperties) load(reader io.Reader) error {
+func (p OsEnvProperties) load(reader io.ReadCloser) error {
 	bufReader := bufio.NewReader(reader)
 
 	for {
@@ -41,7 +42,11 @@ func (p OsEnvProperties) Set(key string, val string) {
 }
 
 // NewOsEnvProperties NewOsEnvProperties constructor
-func NewOsEnvProperties(reader io.Reader) (Properties, error) {
+func NewOsEnvProperties(uri string) (Properties, error) {
+
+	reader := propertyio.GetProtocolHandler(uri)()
+	defer reader.Close()
+
 	pf := OsEnvProperties(make(map[string]string))
 	err := pf.load(reader)
 	if err != nil {
