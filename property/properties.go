@@ -24,26 +24,16 @@ func CreateProperties(uri string) Properties {
 func GetPropertyHandler(uri string) (ph propertiesHandler) {
 	extension := GetExtension(uri)
 	switch extension {
-	case OS:
-		ph = OsEnvPropertiesCreator(uri)
-	case STRING:
-		ph = StringPropertiesCreator(uri)
 	case JSON:
 	case YAML:
 	case XML:
-	default:
+	default: // OS, STRING as well
+		ph = StringPropertiesCreator(uri)
 	}
 	return
 }
 
 type propertiesHandler func() (Properties, error)
-
-var OsEnvPropertiesCreator = func(uri string) propertiesHandler {
-	return func() (Properties, error) {
-		p, err := NewOsEnvProperties(uri)
-		return p, err
-	}
-}
 
 var StringPropertiesCreator = func(uri string) propertiesHandler {
 	return func() (Properties, error) {
