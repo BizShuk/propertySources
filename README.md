@@ -23,9 +23,9 @@ user can registor specific property file
 
 ### Extend property source
 
-- http
+- [x] http
 - ftp
-- file
+- [x] file
 
 ### increase code coverage
 
