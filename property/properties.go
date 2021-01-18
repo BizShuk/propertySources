@@ -13,10 +13,10 @@ type Properties interface {
 }
 
 func CreateProperties(uri string) Properties {
-	extension := GetExtension(uri)
-	createPropertyHandler := GetPropertyHandler(extension)
 
-	p, err := createPropertyHandler(uri)
+	handler := GetPropertyHandler(uri)
+
+	p, err := handler(uri)
 	if err != nil {
 		return nil
 	}
@@ -24,7 +24,8 @@ func CreateProperties(uri string) Properties {
 }
 
 // GetPropertyHandler factory
-func GetPropertyHandler(extension int) (ph propertiesHandler) {
+func GetPropertyHandler(uri string) (ph propertiesHandler) {
+	extension := GetExtension(uri)
 	switch extension {
 	case OS:
 		ph = OsEnvPropertiesCreator
