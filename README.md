@@ -10,7 +10,7 @@ Default sequence: `.env` file in current folder > environment variable
 
 ### Extend profiel concept
 
-including dev, qa, cert, production. at least for `.env` file
+Including dev, qa, cert, production. at least for `.env` file. Check <https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used>
 
 ### Customized registor
 
