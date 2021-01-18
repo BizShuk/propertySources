@@ -16,18 +16,19 @@ func (p StringProperties) ReadFrom(reader io.Reader) (n int64, err error) {
 
 	for {
 		line, _, err := bufReader.ReadLine()
+		n += int64(len(line))
 		if err != nil {
 			if err == io.EOF {
 				break
 			}
-			return 0, err
+			return n, err
 		}
 		s := string(line)
 		i := strings.IndexAny(s, "=")
 		p[s[0:i]] = s[i+1:]
 	}
 
-	return 0, nil
+	return n, nil
 }
 
 // Get property with key

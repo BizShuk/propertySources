@@ -13,10 +13,7 @@ type Properties interface {
 }
 
 func CreateProperties(uri string) Properties {
-
-	handler := GetPropertyHandler(uri)
-
-	p, err := handler(uri)
+	p, err := GetPropertyHandler(uri)()
 	if err != nil {
 		return nil
 	}
@@ -28,9 +25,9 @@ func GetPropertyHandler(uri string) (ph propertiesHandler) {
 	extension := GetExtension(uri)
 	switch extension {
 	case OS:
-		ph = OsEnvPropertiesCreator
+		ph = OsEnvPropertiesCreator(uri)
 	case STRING:
-		ph = StringPropertiesCreator
+		ph = StringPropertiesCreator(uri)
 	case JSON:
 	case YAML:
 	case XML:
@@ -39,19 +36,25 @@ func GetPropertyHandler(uri string) (ph propertiesHandler) {
 	return
 }
 
-type propertiesHandler func(uri string) (Properties, error)
+type propertiesHandler func() (Properties, error)
 
-var OsEnvPropertiesCreator = func(uri string) (Properties, error) {
-	p, err := NewOsEnvProperties(uri)
-	return p, err
+var OsEnvPropertiesCreator = func(uri string) propertiesHandler {
+	return func() (Properties, error) {
+		p, err := NewOsEnvProperties(uri)
+		return p, err
+	}
 }
 
-var StringPropertiesCreator = func(uri string) (Properties, error) {
-	p, err := NewStringProperties(uri)
-	return p, err
+var StringPropertiesCreator = func(uri string) propertiesHandler {
+	return func() (Properties, error) {
+		p, err := NewStringProperties(uri)
+		return p, err
+	}
 }
 
-var JsonPropertiesCreator = func(uri string) (Properties, error) {
-	p, err := NewJsonProperties(uri)
-	return p, err
+var JsonPropertiesCreator = func(uri string) propertiesHandler {
+	return func() (Properties, error) {
+		p, err := NewJsonProperties(uri)
+		return p, err
+	}
 }
